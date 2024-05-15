@@ -10,14 +10,14 @@
 #pragma once
 
 #include <time.h>
-#include "list.h" 
-#include "string.h" 
+#include "list.h"
+#include "str.h"
 
 // File search constants, for file_expand_directory() and
 //   path_expand_directory()
 
 // Default file search is files and directories, no prepended path
-#define FE_DEFAULT            (FE_FILES | FE_DIRS) 
+#define FE_DEFAULT            (FE_FILES | FE_DIRS)
 
 // Prepend relative or absolute path to all names
 #define FE_PREPEND_PATH       0x0001
@@ -33,15 +33,23 @@
 
 BEGIN_DECLS
 
-int     file_readline (FILE *f, char **buffer);
-int64_t file_get_size (const char *filename);
-time_t  file_get_mtime (const char *filename);
-BOOL    file_exists (const char *filename);
-BOOL    file_is_regular (const char *filename);
-BOOL    file_is_directory (const char *filename);
-BOOL    file_expand_directory (const char *path, int flags, 
-          List **names);
-BOOL    file_write_from_string (const char *filename, const String *string);
-char   *file_glob_to_regex (const char *glob);
+int file_readline(FILE *f, char **buffer);
+
+int64_t file_get_size(const char *filename);
+
+time_t file_get_mtime(const char *filename);
+
+BOOL file_exists(const char *filename);
+
+BOOL file_is_regular(const char *filename);
+
+BOOL file_is_directory(const char *filename);
+
+BOOL file_expand_directory(const char *path, int flags,
+                           List **names);
+
+BOOL file_write_from_string(const char *filename, const String *string);
+
+char *file_glob_to_regex(const char *glob);
 
 END_DECLS

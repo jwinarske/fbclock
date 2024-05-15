@@ -12,22 +12,21 @@
 
 ============================================================================*/
 
-#define _GNU_SOURCE
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <dirent.h>
-#include <string.h>
+#include <str.h>
 #include <errno.h>
 #include <fcntl.h>
 #include <unistd.h>
 #include <regex.h>
-#include "defs.h" 
-#include "file.h" 
-#include "log.h" 
-#include "list.h" 
-#include "string.h" 
+#include "defs.h"
+#include "file.h"
+#include "log.h"
+#include "list.h"
+#include "str.h"
 
 
 /*==========================================================================
@@ -37,43 +36,38 @@
   Returns the number of bytes read, or zero if end of file, or
     -1 if error
 *==========================================================================*/
-int file_readline (FILE *f, char **buffer)
-  {
-  int ch;
-  int ret = -1;
-  size_t buflen = 0, nchar = 64;
-  int count = 0;
+int file_readline(FILE *f, char **buffer) {
+    int ch;
+    int ret = -1;
+    size_t buflen = 0, nchar = 64;
+    int count = 0;
 
-  LOG_IN
+    LOG_IN
 
-  *buffer = malloc (nchar);    
+    *buffer = malloc(nchar);
 
-  while ((ch = fgetc (f)) != '\n' && ch != EOF) 
-    {
-    (*buffer)[buflen++] = ch;
-    count++;
+    while ((ch = fgetc(f)) != '\n' && ch != EOF) {
+        (*buffer)[buflen++] = ch;
+        count++;
 
-    if (buflen + 1 >= nchar) 
-      {  
-      char *tmp = realloc (*buffer, nchar * 2);
-      *buffer = tmp;
-      nchar *= 2;
-      }
+        if (buflen + 1 >= nchar) {
+            char *tmp = realloc(*buffer, nchar * 2);
+            *buffer = tmp;
+            nchar *= 2;
+        }
     }
 
-  (*buffer)[buflen] = 0;
+    (*buffer)[buflen] = 0;
 
-  if (buflen == 0 && ch == EOF) 
-    {
-    free (*buffer);
-    ret = 0; 
-    }
-  else
-    ret = count;
+    if (buflen == 0 && ch == EOF) {
+        free(*buffer);
+        ret = 0;
+    } else
+        ret = count;
 
-  return ret;
-  LOG_OUT
-  }
+    return ret;
+    LOG_OUT
+}
 
 
 /*==========================================================================
@@ -82,18 +76,16 @@ int file_readline (FILE *f, char **buffer)
     errno will be set. If the filename is a symlink, then the result
     is the size of the file, not the link
 *==========================================================================*/
-int64_t file_get_size (const char *filename)
-  {
-  LOG_IN
-  int ret = -1;
-  struct stat sb;
-  if (stat (filename, &sb) == 0)
-    {
-    ret = sb.st_size;
+int64_t file_get_size(const char *filename) {
+    LOG_IN
+    int ret = -1;
+    struct stat sb;
+    if (stat(filename, &sb) == 0) {
+        ret = sb.st_size;
     }
-  LOG_OUT
-  return ret;
-  }
+    LOG_OUT
+    return ret;
+}
 
 
 /*==========================================================================
@@ -102,72 +94,64 @@ int64_t file_get_size (const char *filename)
     errno will be set. If the filename is a symlink, then the result
     applies to the file, not the link
 *==========================================================================*/
-time_t file_get_mtime (const char *filename)
-  {
-  LOG_IN
-  time_t ret = -1;
-  struct stat sb;
-  if (stat (filename, &sb) == 0)
-    {
-    ret = sb.st_mtime;
+time_t file_get_mtime(const char *filename) {
+    LOG_IN
+    time_t ret = -1;
+    struct stat sb;
+    if (stat(filename, &sb) == 0) {
+        ret = sb.st_mtime;
     }
-  LOG_OUT
-  return ret;
-  }
+    LOG_OUT
+    return ret;
+}
 
 /*==========================================================================
   file_exists
   Returns TRUE if the file exists, in the most rudimentary sense -- 
     a stat() call succeeds.
 *==========================================================================*/
-BOOL file_exists (const char *filename)
-  {
-  LOG_IN
-  BOOL ret = FALSE;
-  struct stat sb;
-  if (stat (filename, &sb) == 0)
-    {
-    ret = TRUE; 
+BOOL file_exists(const char *filename) {
+    LOG_IN
+    BOOL ret = FALSE;
+    struct stat sb;
+    if (stat(filename, &sb) == 0) {
+        ret = TRUE;
     }
-  LOG_OUT
-  return ret;
-  }
+    LOG_OUT
+    return ret;
+}
 
 /*==========================================================================
   file_is_regular
   Return TRUE if the file exists, and is a regular file. 
     A non-existent file is, by definition, not regular 
 *==========================================================================*/
-BOOL file_is_regular (const char *filename)
-  {
-  LOG_IN
-  BOOL ret = FALSE;
-  struct stat sb;
-  if (stat (filename, &sb) == 0)
-    {
-    ret = S_ISREG (sb.st_mode); 
+BOOL file_is_regular(const char *filename) {
+    LOG_IN
+    BOOL ret = FALSE;
+    struct stat sb;
+    if (stat(filename, &sb) == 0) {
+        ret = S_ISREG (sb.st_mode);
     }
-  LOG_OUT
-  return ret;
-  }
+    LOG_OUT
+    return ret;
+}
 
 /*==========================================================================
   file_is_directory
   Return TRUE if the file exists, and is a directory. A non-existent file
     is, by definition, not a directory
 *==========================================================================*/
-BOOL file_is_directory (const char *filename)
-  {
-  LOG_IN
-  BOOL ret = FALSE;
-  struct stat sb;
-  if (stat (filename, &sb) == 0)
-    {
-    ret = S_ISDIR (sb.st_mode); 
+BOOL file_is_directory(const char *filename) {
+    LOG_IN
+    BOOL ret = FALSE;
+    struct stat sb;
+    if (stat(filename, &sb) == 0) {
+        ret = S_ISDIR (sb.st_mode);
     }
-  LOG_OUT
-  return ret;
-  }
+    LOG_OUT
+    return ret;
+}
 
 /*==========================================================================
 
@@ -177,28 +161,24 @@ BOOL file_is_directory (const char *filename)
     warning
 
 *==========================================================================*/
-BOOL file_write_from_string (const char *filename, const String *string)
-  {
-  LOG_IN
-  BOOL ret = FALSE;
+BOOL file_write_from_string(const char *filename, const String *string) {
+    LOG_IN
+    BOOL ret = FALSE;
 
-  log_debug ("file_write_from_string: %s", filename);
-  int f = open (filename, O_WRONLY | O_CREAT | O_TRUNC, 0770);
-  if (f)
-    {
-    log_debug ("file opened");
-    if (write (f, string_cstr(string), 
-         string_length (string)) == string_length (string))
-      ret = TRUE;
-    close (f);
-    }
-  else
-    {
-    log_debug ("can't open file for writing: %s: %s", filename,
-      strerror (errno));
+    log_debug("file_write_from_string: %s", filename);
+    int f = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0770);
+    if (f) {
+        log_debug("file opened");
+        if (write(f, string_cstr(string),
+                  string_length(string)) == string_length(string))
+            ret = TRUE;
+        close(f);
+    } else {
+        log_debug("can't open file for writing: %s: %s", filename,
+                  strerror(errno));
     }
 
-  LOG_OUT
-  return ret;
-  }
+    LOG_OUT
+    return ret;
+}
 

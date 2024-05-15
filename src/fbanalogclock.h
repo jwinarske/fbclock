@@ -13,7 +13,7 @@
 
 BEGIN_DECLS
 
-void program_draw_clock_in_region (Region *r, BOOL seconds, BOOL date);
+void program_draw_clock_in_region(Region *r, BOOL seconds, BOOL date);
 
 END_DECLS
 

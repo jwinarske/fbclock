@@ -10,12 +10,11 @@
 
 #include "defs.h"
 
-typedef struct _BitmapFont
-  {
-  const uint8_t *table;
-  int width;
-  int height; 
-  } BitmapFont;
+typedef struct _BitmapFont {
+    const uint8_t *table;
+    int width;
+    int height;
+} BitmapFont;
 
 extern BitmapFont font8;
 extern BitmapFont font12;
